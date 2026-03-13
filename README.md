@@ -26,3 +26,6 @@ Final submission (with TTA): 0.404
 1. Download NYUv2 dataset
 2. Set DATA_ROOT path
 3. Run notebook
+
+## Pretrained Model
+Best model (mIoU=0.404 with TTA) is included as best_model.pth
