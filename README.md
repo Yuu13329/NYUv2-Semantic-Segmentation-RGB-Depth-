@@ -82,10 +82,3 @@ Horizontal flip Test Time Augmentation (TTA)
 1. Download NYUv2 dataset separately.
 2. Place dataset under ./data following the structure above.
 3. Open notebook and run sequentially.
-
----
-
-## Note
-
-Dataset is not included due to size and license restrictions.
-Pretrained model (≈30MB) is included.
