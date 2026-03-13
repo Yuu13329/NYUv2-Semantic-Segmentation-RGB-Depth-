@@ -1,31 +1,91 @@
-# NYUv2 Semantic Segmentation (RGB + Depth)
+# NYUv2 Semantic Segmentation with RGB-D UNet
+
+Author: Yuu (2025)
+
+This repository implements semantic segmentation on the NYUv2 dataset using a UNet architecture with RGB and Depth input.
+
+---
 
 ## Overview
-This project implements semantic segmentation on NYUv2 dataset using UNet with RGB and Depth input.
 
-## Model
+- Model: UNet
 - Input: 4 channels (RGB + Depth)
-- Resolution: 256x256
-- Loss: CrossEntropy + DiceLoss
-- Ignore index applied
-- AMP enabled
-- Best model selected by validation mIoU
-- TTA (horizontal flip)
+- Resolution: 256 × 256
+- Loss: CrossEntropyLoss + DiceLoss
+- Scheduler: CosineAnnealingLR
+- Mixed Precision (AMP)
+- Test Time Augmentation (Horizontal Flip)
 
-## Result
-Validation mIoU: ~0.31  
-Final submission (with TTA): 0.404
+---
 
 ## Key Design Decisions
-- Unified spatial resolution
-- NEAREST interpolation for labels
-- Combined CE + Dice for class imbalance
-- Simple channel concatenation for RGB + Depth
+
+### Unified Resolution
+All RGB images, depth maps, and labels are resized to 256×256.  
+Label resizing uses NEAREST interpolation to prevent class index corruption.
+
+### RGB-D Fusion
+Depth is concatenated as a fourth channel (no handcrafted fusion).  
+The network learns geometric representations directly.
+
+### Loss Design
+- CrossEntropyLoss for pixel-wise classification
+- DiceLoss for class imbalance robustness
+- ignore_index=255 excluded from loss
+
+### Training Stabilization
+- Mixed Precision (AMP)
+- Cosine Annealing scheduler
+- Best model saved by validation mIoU
+
+### Inference Enhancement
+Horizontal flip Test Time Augmentation (TTA)
+
+---
+
+## Results
+
+- Best validation mIoU: ~0.31  
+- Final TTA mIoU: 0.404
+
+---
+
+## Repository Structure
+
+    nyuv2-semantic-segmentation-rgbd/
+    ├── notebooks/
+    │   └── NYUv2_Yuu.ipynb
+    ├── models/
+    │   └── best_model.pth
+    ├── outputs/
+    │   └── submission.npy
+    ├── README.md
+    └── .gitignore
+
+---
+
+## Dataset Structure (not included)
+
+    data/
+    ├── train/
+    │   ├── image/
+    │   ├── depth/
+    │   └── label/
+    └── test/
+        ├── image/
+        └── depth/
+
+---
 
 ## How to Run
-1. Download NYUv2 dataset
-2. Set DATA_ROOT path
-3. Run notebook
 
-## Pretrained Model
-Best model (mIoU=0.404 with TTA) is included as best_model.pth
+1. Download NYUv2 dataset separately.
+2. Place dataset under ./data following the structure above.
+3. Open notebook and run sequentially.
+
+---
+
+## Note
+
+Dataset is not included due to size and license restrictions.
+Pretrained model (≈30MB) is included.
